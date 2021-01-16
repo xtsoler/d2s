@@ -18,10 +18,11 @@ This directory can be openned with git / gitExt etc.
 
 Next we select "open folder" from Visual Studio Code or your fav IDE.
 We can make changes in the files, for example in d2s.go or item.go.
-Then we can test our changes by running the following if we are in the included in 
+Then we can test our changes by running the following from the included in 
 the repo "examples" directory with our cli:
 
 For windows batch:
 set "GOARCH=amd64" && set "GOOS=windows" && go build d2s_pd2_run.go && d2s_pd2_run.exe pd2_thebow.d2s
 
 This should give you the output json on the standard output of your cli.
+The output json file should also be created in the same directory.
