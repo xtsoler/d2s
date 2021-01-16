@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/binary"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
@@ -47,6 +48,14 @@ func parse(bfr *bufio.Reader) (*Character, error) {
 	if err := parseSkills(bfr, char); err != nil {
 		return nil, encodeError(char, err.Error())
 	}
+	//fmt.Println("hadooken!")
+	// skip 3 bytes to comply with the pd2 save file header
+	skipOneByte(bfr, char)
+	skipOneByte(bfr, char)
+	skipOneByte(bfr, char)
+
+	// parseDebug(bfr, char)
+	//fmt.Println("znto")
 
 	if err := parseItems(bfr, char); err != nil {
 		return nil, encodeError(char, err.Error())
@@ -210,16 +219,64 @@ func parseSkills(bfr io.Reader, char *Character) error {
 	return nil
 }
 
-// Parses all items on the character, this includes items in stash, cube,
-// inventory and equipped items.
-func parseItems(bfr io.ByteReader, char *Character) error {
+// skip one byte?
+func skipOneByte(bfr io.ByteReader, char *Character) error {
 	// Make a buffer that can hold 4 bytes, which can hold the items header.
+
+	buf := make([]byte, 1)
+
+	_, err := io.ReadFull(bfr.(io.Reader), buf[:1])
+	if err != nil {
+		return err
+	}
+	//fmt.Println("skipped one byte.")
+
+	return nil
+}
+
+// Parses 4 bytes and spits them out. That's it!
+func parseDebug(bfr io.ByteReader, char *Character) error {
+	// Make a buffer that can hold 4 bytes, which can hold the items header.
+
 	buf := make([]byte, 4)
 
 	_, err := io.ReadFull(bfr.(io.Reader), buf[:4])
 	if err != nil {
 		return err
 	}
+	//for _, n := range(buf) {
+	//    fmt.Printf("% 09b", n) // prints 00000000 11111101
+	//}
+	//fmt.Println()
+
+	//byteArray := []byte("Learn Go!")
+	fmt.Println("byteArray: ", buf)
+	encodedString := hex.EncodeToString(buf)
+	fmt.Println("Encoded Hex String: ", encodedString)
+
+	return nil
+}
+
+// Parses all items on the character, this includes items in stash, cube,
+// inventory and equipped items.
+func parseItems(bfr io.ByteReader, char *Character) error {
+	// Make a buffer that can hold 4 bytes, which can hold the items header.
+
+	buf := make([]byte, 4)
+
+	_, err := io.ReadFull(bfr.(io.Reader), buf[:4])
+	if err != nil {
+		return err
+	}
+	//for _, n := range(buf) {
+	//    fmt.Printf("% 09b", n) // prints 00000000 11111101
+	//}
+	//fmt.Println()
+
+	//byteArray := []byte("Learn Go!")
+	//fmt.Println("byteArray: ", buf)
+	//encodedString := hex.EncodeToString(buf)
+	//fmt.Println("Encoded Hex String: ", encodedString)
 
 	itemHeaderData := itemData{}
 	err = binary.Read(bytes.NewBuffer(buf), binary.LittleEndian, &itemHeaderData)
@@ -227,11 +284,14 @@ func parseItems(bfr io.ByteReader, char *Character) error {
 	if err != nil {
 		return err
 	}
-
+	//fmt.Println(string(itemHeaderData.Header[:]))
 	if string(itemHeaderData.Header[:]) != "JM" {
+
 		return errors.New("failed to find the items header")
 	}
 
+	//fmt.Println("total items:")
+	//fmt.Println(int(itemHeaderData.Count))
 	items, err := parseItemList(bfr, int(itemHeaderData.Count))
 	if err != nil {
 		return err
@@ -398,14 +458,19 @@ func parseItemList(bfr io.ByteReader, itemCount int) ([]Item, error) {
 	// list in order to read them as well.
 	numberOfItemsToRead := itemCount
 
+	fmt.Println("total items to parse:", numberOfItemsToRead)
+
 	for i := 0; i < numberOfItemsToRead; i++ {
+		fmt.Println("parsing item:", i)
+
 		var readBits int
 		parsed := Item{}
 
 		// Read the 111 bit basic item structure, all items have this structure.
 		err := parseSimpleBits(&ibr, &parsed)
 		readBits += 111
-
+		fmt.Println("item type:", parsed.Type)
+		fmt.Println("item type name:", parsed.TypeName)
 		if err != nil {
 			return []Item{}, err
 		}
@@ -718,6 +783,8 @@ func parseSimpleBits(ibr *bitReader, item *Item) error {
 
 	if fmt.Sprintf("%c", j) != "J" || fmt.Sprintf("%c", m) != "M" {
 		return errors.New("failed to find item header JM")
+	} else {
+		fmt.Println("found JM header")
 	}
 
 	// offset: 16, unknown
@@ -809,12 +876,14 @@ func parseSimpleBits(ibr *bitReader, item *Item) error {
 	readBits += 4
 
 	// offset 69
-	item.PositionY = reverseBits(ibr.ReadBits64(3, true), 3)
-	readBits += 3
+	//item.PositionY = reverseBits(ibr.ReadBits64(3, true), 3)
+	//readBits += 3
+	item.PositionY = reverseBits(ibr.ReadBits64(4, true), 4)
+	readBits += 4
 
 	// offset 72
-	_ = reverseBits(ibr.ReadBits64(1, true), 1)
-	readBits++
+	//_ = reverseBits(ibr.ReadBits64(1, true), 1)
+	//readBits++
 
 	// offset 73, if item is neither equipped or in the belt, this tells us where it is.
 	item.AltPositionID = reverseBits(ibr.ReadBits64(3, true), 3)
@@ -987,18 +1056,41 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 
 		// If all 9 bits are set, we've hit the end of the stats section
 		//  at 0x1ff and exit the loop.
+
 		if id == 0x1ff {
+			fmt.Println("9 bits flext")
 			break
 		}
-
+		//fmt.Println("current magic id:")
+		//fmt.Println(id)
 		prop, ok := magicalProperties[id]
 		if !ok {
+			if true {
+				for i := 1; i < 500; i++ {
+					fmt.Print(ibr.ReadBits64(1, true))
+				}
+				fmt.Println()
+			}
+
 			return magicAttributes, readBits, fmt.Errorf("unknown magical property: %d", id)
+			//fmt.Println("unknown magical property:", id)
+			//continue
+			//prop, ok = unknownMagicalProperties[0]
+		} else {
+			fmt.Println("found magical property:", id, " ", prop.Name, " ", prop.Bits)
+			if id == 384 {
+				if false { // debug code
+					for i := 1; i < 500; i++ {
+						fmt.Print(ibr.ReadBits64(1, true))
+					}
+					fmt.Println()
+				}
+			}
 		}
 
 		var values []int64
 		for _, bitLength := range prop.Bits {
-
+			//fmt.Println("bitLength:", int(bitLength))
 			val := reverseBits(ibr.ReadBits64(bitLength, true), bitLength)
 			readBits += int(bitLength)
 
@@ -1008,7 +1100,7 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 
 			values = append(values, int64(val))
 		}
-
+		fmt.Println("values:", values)
 		attr := magicAttribute{
 			ID:     id,
 			Name:   prop.Name,
