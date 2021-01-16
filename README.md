@@ -23,6 +23,7 @@ the repo "examples" directory with our cli:
 
 For windows batch:
 set "GOARCH=amd64" && set "GOOS=windows" && go build d2s_pd2_run.go && d2s_pd2_run.exe pd2_thebow.d2s
+
 For windows powershell:
 set "GOARCH=amd64"; set "GOOS=windows"; go build d2s_pd2_run.go; .\d2s_pd2_run.exe pd2_thebow.d2s
 
