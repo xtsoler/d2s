@@ -8,7 +8,7 @@ On the default path.
 Also I downloaded and installed Visual Studio Code.
 
 Now we are ready to fetch the repo.
-From a command line or powershell (I'm on windows bash should also work):
+From a command line or powershell (I'm on windows):
 
 go get github.com/xtsoler/d2s
 
