@@ -25,10 +25,6 @@ For windows batch:
 
 set "GOARCH=amd64" && set "GOOS=windows" && go build d2s_pd2_run.go && d2s_pd2_run.exe pd2_thebow.d2s
 
-For windows powershell:
-
-Set-Variable -Name "GOARCH" -Value "amd64";Set-Variable -Name "GOOS" -Value "windows"; ; go build d2s_pd2_run.go; .\d2s_pd2_run.exe pd2_thebow.d2s
-
 This should give you the log output on the standard output of your cli.
 The output json file should also be created in the same directory.
 
@@ -37,7 +33,3 @@ To build for web
 batch:
 
 set "GOARCH=wasm" && set "GOOS=js" && go build -o pd2_d2s_parser_v001.wasm pd2_d2s_web.go
-
-powershell:
-
-Set-Variable -Name "GOARCH" -Value "wasm";Set-Variable -Name "GOOS" -Value "js"; go build -o pd2_d2s_parser_v001.wasm .\pd2_d2s_web.go
