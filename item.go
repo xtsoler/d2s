@@ -923,6 +923,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	360: {Bits: []uint{41}, Name: "Corrupted"},
 	// PD2 map magic property codes
 	//320: {Bits: []uint{9}, Name: "?"},
+	363: {Bits: []uint{6}, Name: "Regenerate Mana {0}%"},
 	370: {Bits: []uint{8}, Name: "Magic Bonus {0}%"},
 	371: {Bits: []uint{9}, Name: "Goldfind Bonus {0}%"},
 	372: {Bits: []uint{12}, Name: "Monster Desnity {0}%"},

@@ -1122,7 +1122,7 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 			//prop, ok = unknownMagicalProperties[0]
 		} else {
 			fmt.Println("found magical property:", id, " ", prop.Name, " ", prop.Bits)
-			if id == 427 {
+			if id == 363 {
 				if false { // debug code
 					for i := 1; i < 500; i++ {
 						fmt.Print(ibr.ReadBits64(1, true))
