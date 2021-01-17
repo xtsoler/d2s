@@ -558,6 +558,16 @@ var quantityMap = map[string]bool{
 	"fed":  true,
 	"ceh":  true,
 	"rera": true,
+	"imma": true,
+	"imra": true,
+	"scou": true,
+	"dcso": true,
+	"mbr": true,
+	"dcbl": true,
+	"dhn": true,
+	"dcho": true,
+	"bey": true,
+	//"dcma": true, //this is actually not stackable!
 
 	//Throwables
 	"tkf": true,
@@ -645,11 +655,11 @@ var magicalProperties = map[uint64]magicalProperty{
 	44: {Bits: []uint{5}, Name: "+{0}% to Maximum Cold Resist"},
 	45: {Bits: []uint{8}, Bias: 50, Name: "Poison Resist +{0}%"},
 	46: {Bits: []uint{5}, Name: "+{0}% to Maximum Poison Resist"},
-	48: {Bits: []uint{8, 9}, Name: "Adds {0}-{1} Fire Damage"},
+	48: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Fire Damage"}, // was 8, 9
 	49: {Bits: []uint{9}, Name: "+{0} to Maximum Fire Damage"},
 	50: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Lightning Damage"},
 	52: {Bits: []uint{8, 9}, Name: "Adds {0}-{1} Magic Damage"},
-	54: {Bits: []uint{8, 9, 8}, Name: "Adds {0}-{1} Cold Damage"},
+	54: {Bits: []uint{8, 9, 8}, Name: "Adds {0}-{1} Cold Damage"}, // was 8, 9, 8
 	57: {Bits: []uint{14, 14, 9}, Name: "Adds {0}-{1} Poison Damage over {2} Seconds"}, // was 10, 10, 9 but still it looks a bit off on the values
 	60: {Bits: []uint{7}, Name: "{0}% Life Stolen Per Hit"},
 	62: {Bits: []uint{7}, Name: "{0}% Mana Stolen Per Hit"},
@@ -1649,8 +1659,16 @@ var miscCodes = map[string]string{
 	"lbox": "Larzuk's Puzzlebox",
 	"upma": "Angelic Orb",
 	"t16":  "Ruins of Viz-Jun Map",
+	"t17":  "River of Blood Map",
 	"t18":  "Phlegethon Map",
 	"rera": "Horadrim Orb",
+	"imma": "Arcane Orb",
+	"imra": "Arcane Orb",
+	"scou": "Orb of Destruction",
+	"dcso": "Prime Evil Soul",
+	"dcbl": "Pure Demonic Essense",
+	"dcho": "Black Soulstone",
+	"dcma": "Vision of Terror",
 }
 
 var rareNames = map[uint64]string{

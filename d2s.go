@@ -461,7 +461,7 @@ func parseItemList(bfr io.ByteReader, itemCount int) ([]Item, error) {
 	fmt.Println("total items to parse:", numberOfItemsToRead)
 
 	for i := 0; i < numberOfItemsToRead; i++ {
-		fmt.Println("parsing item:", i)
+		fmt.Println("parsing item:", (i + 1), " /",numberOfItemsToRead)
 
 		var readBits int
 		parsed := Item{}
@@ -1045,8 +1045,33 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 
 	var magicAttributes []magicAttribute
 	var readBits int
+	var rollForward2nextMarker = false
 
 	for {
+		if(rollForward2nextMarker){
+			fmt.Println("break it!")
+			// look ahead to see what we can make of this 
+			if true {
+				var countConsequtiveTrues = 0
+				for i := 1; i < 500; i++ {
+					var nextBit = ibr.ReadBits64(1, true)
+					readBits += 1
+					if nextBit == 1 {
+						countConsequtiveTrues++
+					} else {
+						countConsequtiveTrues = 0
+					}
+					fmt.Print(nextBit)
+					if(countConsequtiveTrues == 9){
+						fmt.Println("countConsequtiveTrues", countConsequtiveTrues)
+						break
+					}
+				}
+				//fmt.Println()
+			}
+			break
+		}
+		
 		id := reverseBits(ibr.ReadBits64(9, true), 9)
 		readBits += 9
 
@@ -1058,30 +1083,50 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 		//  at 0x1ff and exit the loop.
 
 		if id == 0x1ff {
-			fmt.Println("9 bits flext")
+			fmt.Println("9 bits true item magic attributes end marker")
 			break
 		}
 		//fmt.Println("current magic id:")
 		//fmt.Println(id)
 		prop, ok := magicalProperties[id]
 		if !ok {
-			if true {
+			// look ahead to see what we can make of this 
+			if false {
 				for i := 1; i < 500; i++ {
 					fmt.Print(ibr.ReadBits64(1, true))
 				}
 				fmt.Println()
 			}
 
-			return magicAttributes, readBits, fmt.Errorf("unknown magical property: %d", id)
-			//fmt.Println("unknown magical property:", id)
-			//continue
+			// trying to skip this item doesn't work because we might have 
+			// already skipped a magical attributes end marker already
+			if true {
+				return magicAttributes, readBits, fmt.Errorf("unknown magical property: %d", id)
+			} else {
+				fmt.Println("unknown magical property:", id)
+				// append a dummy attr
+				var values []int64
+				values = append(values, int64(0))
+				attr := magicAttribute{
+					ID:     id,
+					Name:   "unknown magical property",
+					Values: values,
+				}
+
+				magicAttributes = append(magicAttributes, attr)
+				// we need to roll forward until the next marker
+				rollForward2nextMarker = true
+				continue
+			}
+			
 			//prop, ok = unknownMagicalProperties[0]
 		} else {
 			fmt.Println("found magical property:", id, " ", prop.Name, " ", prop.Bits)
-			if id == 384 {
+			if id == 48 {
 				if false { // debug code
 					for i := 1; i < 500; i++ {
 						fmt.Print(ibr.ReadBits64(1, true))
+						readBits += 1
 					}
 					fmt.Println()
 				}
@@ -1101,6 +1146,9 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 			values = append(values, int64(val))
 		}
 		fmt.Println("values:", values)
+		if id == 48 && false {
+			return magicAttributes, readBits, fmt.Errorf("debug stop")
+		}
 		attr := magicAttribute{
 			ID:     id,
 			Name:   prop.Name,
