@@ -24,8 +24,8 @@ func main() {
 	}
 
 	defer file.Close()
-
-	char, err := d2s.Parse(file)
+	showDebugOutput := true
+	char, err := d2s.Parse(file, showDebugOutput)
 	if err != nil {
 		log.Fatal(err)
 	}

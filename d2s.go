@@ -10,12 +10,12 @@ import (
 	"io"
 	"strings"
 )
-
+var enableDebugOutput = false
 // Parse will read the data from a d2s character file and return a normalized struct.
-func Parse(file io.Reader) (*Character, error) {
+func Parse(file io.Reader, debugOutput bool) (*Character, error) {
 	// Implements buffered reading, wraps io.Reader.
 	bfr := bufio.NewReader(file)
-
+	enableDebugOutput = debugOutput
 	// Perform the actual reading.
 	return parse(bfr)
 }
@@ -48,14 +48,13 @@ func parse(bfr *bufio.Reader) (*Character, error) {
 	if err := parseSkills(bfr, char); err != nil {
 		return nil, encodeError(char, err.Error())
 	}
-	//fmt.Println("hadooken!")
+
 	// skip 3 bytes to comply with the pd2 save file header
 	skipOneByte(bfr, char)
 	skipOneByte(bfr, char)
 	skipOneByte(bfr, char)
 
 	// parseDebug(bfr, char)
-	//fmt.Println("znto")
 
 	if err := parseItems(bfr, char); err != nil {
 		return nil, encodeError(char, err.Error())
@@ -244,12 +243,7 @@ func parseDebug(bfr io.ByteReader, char *Character) error {
 	if err != nil {
 		return err
 	}
-	//for _, n := range(buf) {
-	//    fmt.Printf("% 09b", n) // prints 00000000 11111101
-	//}
-	//fmt.Println()
 
-	//byteArray := []byte("Learn Go!")
 	fmt.Println("byteArray: ", buf)
 	encodedString := hex.EncodeToString(buf)
 	fmt.Println("Encoded Hex String: ", encodedString)
@@ -268,15 +262,6 @@ func parseItems(bfr io.ByteReader, char *Character) error {
 	if err != nil {
 		return err
 	}
-	//for _, n := range(buf) {
-	//    fmt.Printf("% 09b", n) // prints 00000000 11111101
-	//}
-	//fmt.Println()
-
-	//byteArray := []byte("Learn Go!")
-	//fmt.Println("byteArray: ", buf)
-	//encodedString := hex.EncodeToString(buf)
-	//fmt.Println("Encoded Hex String: ", encodedString)
 
 	itemHeaderData := itemData{}
 	err = binary.Read(bytes.NewBuffer(buf), binary.LittleEndian, &itemHeaderData)
@@ -286,7 +271,6 @@ func parseItems(bfr io.ByteReader, char *Character) error {
 	}
 	//fmt.Println(string(itemHeaderData.Header[:]))
 	if string(itemHeaderData.Header[:]) != "JM" {
-
 		return errors.New("failed to find the items header")
 	}
 
@@ -784,7 +768,9 @@ func parseSimpleBits(ibr *bitReader, item *Item) error {
 	if fmt.Sprintf("%c", j) != "J" || fmt.Sprintf("%c", m) != "M" {
 		return errors.New("failed to find item header JM")
 	} else {
-		fmt.Println("found JM header")
+		if (enableDebugOutput){
+			fmt.Println("found JM header")
+		}
 	}
 
 	// offset: 16, unknown
@@ -1049,7 +1035,9 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 
 	for {
 		if(rollForward2nextMarker){
-			fmt.Println("break it!")
+			if (enableDebugOutput){
+				fmt.Println("break loop!")
+			}
 			// look ahead to see what we can make of this 
 			if true {
 				var countConsequtiveTrues = 0
@@ -1063,7 +1051,9 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 					}
 					fmt.Print(nextBit)
 					if(countConsequtiveTrues == 9){
-						fmt.Println("countConsequtiveTrues", countConsequtiveTrues)
+						if (enableDebugOutput){
+							fmt.Println("countConsequtiveTrues", countConsequtiveTrues)
+						}
 						break
 					}
 				}
@@ -1083,7 +1073,9 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 		//  at 0x1ff and exit the loop.
 
 		if id == 0x1ff {
-			fmt.Println("9 bits true item magic attributes end marker")
+			if (enableDebugOutput){
+				fmt.Println("9 bits true item magic attributes end marker")
+			}
 			break
 		}
 		//fmt.Println("current magic id:")
@@ -1121,7 +1113,9 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 			
 			//prop, ok = unknownMagicalProperties[0]
 		} else {
-			fmt.Println("found magical property:", id, " ", prop.Name, " ", prop.Bits)
+			if (enableDebugOutput){
+				fmt.Println("found magical property:", id, " ", prop.Name, " ", prop.Bits)
+			}
 			if id == 363 {
 				if false { // debug code
 					for i := 1; i < 500; i++ {
@@ -1145,7 +1139,9 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 
 			values = append(values, int64(val))
 		}
-		fmt.Println("values:", values)
+		if (enableDebugOutput){
+			fmt.Println("values:", values)
+		}
 		if id == 422 && false {
 			return magicAttributes, readBits, fmt.Errorf("debug stop")
 		}
