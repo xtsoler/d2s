@@ -10,7 +10,9 @@ import (
 	"io"
 	"strings"
 )
+
 var enableDebugOutput = false
+
 // Parse will read the data from a d2s character file and return a normalized struct.
 func Parse(file io.Reader, debugOutput bool) (*Character, error) {
 	// Implements buffered reading, wraps io.Reader.
@@ -441,20 +443,23 @@ func parseItemList(bfr io.ByteReader, itemCount int) ([]Item, error) {
 	// so every time we find an item with socketed items, we'll increment this
 	// list in order to read them as well.
 	numberOfItemsToRead := itemCount
-
+	//if enableDebugOutput {
 	fmt.Println("total items to parse:", numberOfItemsToRead)
-
+	//}
 	for i := 0; i < numberOfItemsToRead; i++ {
-		fmt.Println("parsing item:", (i + 1), " /",numberOfItemsToRead)
-
+		if enableDebugOutput {
+			fmt.Println("parsing item:", (i + 1), " /", numberOfItemsToRead)
+		}
 		var readBits int
 		parsed := Item{}
 
 		// Read the 111 bit basic item structure, all items have this structure.
 		err := parseSimpleBits(&ibr, &parsed)
 		readBits += 111
-		fmt.Println("item type:", parsed.Type)
-		fmt.Println("item type name:", parsed.TypeName)
+		if enableDebugOutput {
+			fmt.Println("item type:", parsed.Type)
+			fmt.Println("item type name:", parsed.TypeName)
+		}
 		if err != nil {
 			return []Item{}, err
 		}
@@ -768,7 +773,7 @@ func parseSimpleBits(ibr *bitReader, item *Item) error {
 	if fmt.Sprintf("%c", j) != "J" || fmt.Sprintf("%c", m) != "M" {
 		return errors.New("failed to find item header JM")
 	} else {
-		if (enableDebugOutput){
+		if enableDebugOutput {
 			fmt.Println("found JM header")
 		}
 	}
@@ -1034,11 +1039,11 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 	var rollForward2nextMarker = false
 
 	for {
-		if(rollForward2nextMarker){
-			if (enableDebugOutput){
+		if rollForward2nextMarker {
+			if enableDebugOutput {
 				fmt.Println("break loop!")
 			}
-			// look ahead to see what we can make of this 
+			// look ahead to see what we can make of this
 			if true {
 				var countConsequtiveTrues = 0
 				for i := 1; i < 500; i++ {
@@ -1050,8 +1055,8 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 						countConsequtiveTrues = 0
 					}
 					fmt.Print(nextBit)
-					if(countConsequtiveTrues == 9){
-						if (enableDebugOutput){
+					if countConsequtiveTrues == 9 {
+						if enableDebugOutput {
 							fmt.Println("countConsequtiveTrues", countConsequtiveTrues)
 						}
 						break
@@ -1061,7 +1066,7 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 			}
 			break
 		}
-		
+
 		id := reverseBits(ibr.ReadBits64(9, true), 9)
 		readBits += 9
 
@@ -1073,7 +1078,7 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 		//  at 0x1ff and exit the loop.
 
 		if id == 0x1ff {
-			if (enableDebugOutput){
+			if enableDebugOutput {
 				fmt.Println("9 bits true item magic attributes end marker")
 			}
 			break
@@ -1082,7 +1087,7 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 		//fmt.Println(id)
 		prop, ok := magicalProperties[id]
 		if !ok {
-			// look ahead to see what we can make of this 
+			// look ahead to see what we can make of this
 			if false {
 				for i := 1; i < 500; i++ {
 					fmt.Print(ibr.ReadBits64(1, true))
@@ -1090,9 +1095,18 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 				fmt.Println()
 			}
 
-			// trying to skip this item doesn't work because we might have 
+			// trying to skip this item doesn't work because we might have
 			// already skipped a magical attributes end marker already
 			if true {
+				//if id == 287 {
+				if true { // debug code
+					for i := 1; i < 500; i++ {
+						fmt.Print(ibr.ReadBits64(1, true))
+						readBits += 1
+					}
+					fmt.Println()
+				}
+				//}
 				return magicAttributes, readBits, fmt.Errorf("unknown magical property: %d", id)
 			} else {
 				fmt.Println("unknown magical property:", id)
@@ -1110,13 +1124,13 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 				rollForward2nextMarker = true
 				continue
 			}
-			
+
 			//prop, ok = unknownMagicalProperties[0]
 		} else {
-			if (enableDebugOutput){
+			if enableDebugOutput {
 				fmt.Println("found magical property:", id, " ", prop.Name, " ", prop.Bits)
 			}
-			if id == 363 {
+			if id == 120 {
 				if false { // debug code
 					for i := 1; i < 500; i++ {
 						fmt.Print(ibr.ReadBits64(1, true))
@@ -1138,8 +1152,9 @@ func parseMagicalList(ibr *bitReader) ([]magicAttribute, int, error) {
 			}
 
 			values = append(values, int64(val))
+
 		}
-		if (enableDebugOutput){
+		if enableDebugOutput {
 			fmt.Println("values:", values)
 		}
 		if id == 422 && false {

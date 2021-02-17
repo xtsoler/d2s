@@ -562,11 +562,11 @@ var quantityMap = map[string]bool{
 	"imra": true,
 	"scou": true,
 	"dcso": true,
-	"mbr": true,
+	"mbr":  true,
 	"dcbl": true,
-	"dhn": true,
+	"dhn":  true,
 	"dcho": true,
-	"bey": true,
+	"bey":  true,
 	//"dcma": true, //this is actually not stackable!
 	"tes": true,
 
@@ -659,8 +659,8 @@ var magicalProperties = map[uint64]magicalProperty{
 	48: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Fire Damage"}, // was 8, 9
 	49: {Bits: []uint{9}, Name: "+{0} to Maximum Fire Damage"},
 	50: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Lightning Damage"},
-	52: {Bits: []uint{8, 9}, Name: "Adds {0}-{1} Magic Damage"},
-	54: {Bits: []uint{8, 9, 8}, Name: "Adds {0}-{1} Cold Damage"}, // was 8, 9, 8
+	52: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Magic Damage"},
+	54: {Bits: []uint{8, 9, 8}, Name: "Adds {0}-{1} Cold Damage"},                      // was 8, 9, 8
 	57: {Bits: []uint{14, 14, 9}, Name: "Adds {0}-{1} Poison Damage over {2} Seconds"}, // was 10, 10, 9 but still it looks a bit off on the values
 	60: {Bits: []uint{7}, Name: "{0}% Life Stolen Per Hit"},
 	62: {Bits: []uint{7}, Name: "{0}% Mana Stolen Per Hit"},
@@ -717,7 +717,8 @@ var magicalProperties = map[uint64]magicalProperty{
 	// additional skill points are given.
 	107: {Bits: []uint{9, 3}, Name: "+{1} To {0}"},
 	108: {Bits: []uint{1}, Name: "Rest In Peace"},
-	109: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
+	//109: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
+	109: {Bits: []uint{9}, Name: "{0}% Reduced Curse Duration}"}, //??? maybe curse duration?
 	181: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
 	182: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
 	183: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
@@ -739,7 +740,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	// The value of the data field is always 1.
 	118: {Bits: []uint{1}, Name: "Half Freeze Duration"},
 	119: {Bits: []uint{9}, Bias: 20, Name: "{0}% Bonus to Attack Rating"},
-	120: {Bits: []uint{7}, Bias: 128, Name: "{0} to Monster Defense Per Hit"},
+	120: {Bits: []uint{10}, Bias: 256, Name: "{0} to Monster Defense Per Hit"}, //was 7
 	121: {Bits: []uint{9}, Bias: 20, Name: "+{0}% Damage to Demons"},
 	122: {Bits: []uint{9}, Bias: 20, Name: "+{0}% Damage to Undead"},
 	123: {Bits: []uint{10}, Bias: 128, Name: "+{0} to Attack Rating against Demons"},
@@ -772,7 +773,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	153: {Bits: []uint{1}, Name: "Cannot Be Frozen"},
 	154: {Bits: []uint{7}, Bias: 20, Name: "{0}% Slower Stamina Drain"},
 	155: {Bits: []uint{10, 7}, Name: "{0}% Chance to Reanimate Target"},
-	156: {Bits: []uint{7}, Name: "Piercing Attack"},
+	156: {Bits: []uint{7}, Name: "+{0} Chance to Pierce"},
 	157: {Bits: []uint{7}, Name: "Fires Magic Arrows"},
 	158: {Bits: []uint{7}, Name: "Fires Explosive Arrows or Bolts"},
 	159: {Bits: []uint{6}, Name: "+{0} to Minimum Throw Damage"},
@@ -915,64 +916,76 @@ var magicalProperties = map[uint64]magicalProperty{
 	334: {Bits: []uint{8}, Name: "-{0}% To Enemy Lightning Resistance"},
 	335: {Bits: []uint{8}, Name: "-{0}% To Enemy Cold Resistance"},
 	336: {Bits: []uint{8}, Name: "-{0}% To Enemy Poison Resistance"},
+	//345: {Bits: []uint{6, 9}, Name: "oxi"},
 	356: {Bits: []uint{2}, Name: "Quest Item Difficulty +{0} (Invisible)"},
 
 	// PD2 item magic property codes
 	358: {Bits: []uint{0}, Name: "is reffered in 359?"}, // this needs fixing
 	359: {Bits: []uint{6, 10, 7}, Name: "Meelee Attacks Deal Splash Damage"},
-	360: {Bits: []uint{41}, Name: "Corrupted"},
+	360: {Bits: []uint{10, 10}, Name: "Corrupted"},
+	//361: {Bits: []uint{7, 7, 13}, Name: "{0} corruptor???"}, // no idea if that is correct!
+	361: {Bits: []uint{12}, Name: "{0} Corruptor"}, // no idea if that is correct!
 	// PD2 map magic property codes
 	//320: {Bits: []uint{9}, Name: "?"},
-	363: {Bits: []uint{6}, Name: "Regenerate Mana {0}%"},
-	370: {Bits: []uint{8}, Name: "Magic Bonus {0}%"},
-	371: {Bits: []uint{9}, Name: "Goldfind Bonus {0}%"},
+	362: {Bits: []uint{6}, Name: "{0} ???"},
+	363: {Bits: []uint{6}, Name: "{0} ???"},
+	364: {Bits: []uint{6}, Name: "{0} ???"},                        // no idea if that is correct!
+	365: {Bits: []uint{6}, Name: "{0} ???"},                        // no idea if that is correct!
+	370: {Bits: []uint{8}, Bias: 100, Name: "Magic Bonus {0}%"},    // we need to subtract 100?
+	371: {Bits: []uint{9}, Bias: 100, Name: "Goldfind Bonus {0}%"}, // we need to subtract 100?
 	372: {Bits: []uint{12}, Name: "Monster Desnity {0}%"},
-	373: {Bits: []uint{9}, Name: "Experience {0}%"},                             // we need to subtract 50? probably I have something wrong
+	373: {Bits: []uint{9}, Bias: 50, Name: "Experience {0}%"}, // we need to subtract 50? probably I have something wrong
 	374: {Bits: []uint{12}, Name: "{0} to Area Level"},
 	375: {Bits: []uint{12}, Name: "Monster Rarity {0}%"},
-	388: {Bits: []uint{9}, Name: "Monsters Have {0}% to Fire Skill Damage"},     // we need to subtract 50? probably I have something wrong
-	389: {Bits: []uint{9}, Name: "Monsters Have {0}% to Lighning Skill Damage"}, // we need to subtract 50? probably I have something wrong
-	390: {Bits: []uint{9}, Name: "Monsters Have {0}% to Cold Skill Damage"},	 // we need to subtract 50? probably I have something wrong
-	391: {Bits: []uint{9}, Name: "Monsters Have {0}% to Poison Skill Damage"},   // we need to subtract 50? probably I have something wrong
-	392: {Bits: []uint{15}, Name: "Monsters Have +{0}% of Physical Damage as Extra Cold Damage"},   // value is totally wrong...
-	394: {Bits: []uint{10}, Name: "Monsters Have +{0}% Attack Rating and Chance to Pierce"},
-	395: {Bits: []uint{9}, Name: "Monsters Have +{0}% Enhanced Defence"},
+	//384: {Bits: []uint{9}, Name: "{0}%"},
+	388: {Bits: []uint{9}, Bias: 50, Name: "Monsters Have {0}% to Fire Skill Damage"},      // we need to subtract 50? probably I have something wrong
+	389: {Bits: []uint{9}, Bias: 50, Name: "Monsters Have +{0}% to Lighning Skill Damage"}, // we need to subtract 50
+	390: {Bits: []uint{9}, Bias: 50, Name: "Monsters Have {0}% to Cold Skill Damage"},      // we need to subtract 50!
+	391: {Bits: []uint{9}, Bias: 50, Name: "Monsters Have +{0}% to Poison Skill Damage"},   // we need to subtract 50!
+	392: {Bits: []uint{7}, Bias: 20, Name: "Monsters Have +{0}% Increased Attack Speed"},   // value is totally wrong... subtract 20?
+	393: {Bits: []uint{7}, Bias: 20, Name: "Monsters Have +{0}% Faster Cast Rate"},         // value is totally wrong... subtract 20?
+	394: {Bits: []uint{10}, Name: "Monsters Have +{0}% Attack Rating"},
+	395: {Bits: []uint{9}, Name: "Monsters Have +{0}% Enhanced Defense"},
+	396: {Bits: []uint{7}, Name: "Monsters Have {0}% Cold Absorb"}, // value was correct in one instance!
 	397: {Bits: []uint{7}, Name: "Monsters Have {0}% Magic Absorb"},
 	398: {Bits: []uint{7}, Name: "Monsters Have {0}% Lightning Absorb"},
 	399: {Bits: []uint{7}, Name: "Monsters Have {0}% Fire Absorb"},
 	400: {Bits: []uint{10}, Name: "Monsters take {0} Reduced Physical Damage"},
-	401: {Bits: []uint{7}, Name: "Monsters Have {0} Increased Velocity"},
-	402: {Bits: []uint{12}, Name: "Monsters Have {0}% Replenish Life"},
+	401: {Bits: []uint{7}, Bias: 30, Name: "Monsters Have {0} Increased Velocity"}, // minus 30 !
+	402: {Bits: []uint{12}, Bias: 30, Name: "Monsters Have {0}% Replenish Life"},   // minus 30 !
 	403: {Bits: []uint{7}, Name: "Monsters Have {0}% Life Stolen Per Hit"},
-	404: {Bits: []uint{7}, Name: "map_mon_fastergethitrate {0}% ??"},
-	405: {Bits: []uint{6}, Name: "Monsters Have {0}% Increased Maximum Life"},    // not working correctly, number is off. Maybe subtract 10 from that?
-	406: {Bits: []uint{7}, Name: "map_mon_pierce????"},
+	404: {Bits: []uint{7}, Bias: 20, Name: "Monsters Have {0}% Faster Hit Recovery"},    //minus 20?
+	405: {Bits: []uint{6}, Bias: 10, Name: "Monsters Have {0}% Increased Maximum Life"}, // subtract 10 from that was correct for 2 instances
+	406: {Bits: []uint{7}, Name: "Monsters Have +{0}% Chance to Pierce"},
+	407: {Bits: []uint{7}, Name: "Monsters Have {0}% Chance of Open Wounds"},   // bits 7 and value was correct for one instance
+	408: {Bits: []uint{7}, Name: "Monsters Have {0}% Chance of Crushing Blow"}, // bits 7 and value was correct for one instance
 	409: {Bits: []uint{9}, Name: "Monsters Have {0}% Curse Duration Reduction"},
-	410: {Bits: []uint{14}, Name: "Players Have -{0}% Enhanced Defence"},		  //we need to subtract 60? probably I have something wrong                           //
-	411: {Bits: []uint{14}, Name: "Players Have -{0}% Faster Hit Recovery"},
-	
-	412: {Bits: []uint{14}, Name: "Players Have -{0}% Chance To Block"},          //we need to subtract 60? probably I have something wrong                           //
-	413: {Bits: []uint{14}, Name: "Players Have -{0} Drain Life"},
+	410: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Enhanced Defense"},    //we need to subtract 60? probably I have something wrong                           //
+	411: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Faster Hit Recovery"}, //minus 60
+
+	412: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Chance To Block"}, //we need to subtract 60!!
+	413: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0} Drain Life"},       // minus 60
 	416: {Bits: []uint{15}, Name: "map_mon_phys_as_extra_mag????"},
-	422: {Bits: []uint{6}, Name: "Replenish 1 in {0} seconds"},  // ?? need to confirm this
-	424: {Bits: []uint{7}, Name: "{0} Life after each Hit"},  // 
+	422: {Bits: []uint{6}, Name: "Replenish 1 in {0} seconds"},                   // ?? need to confirm this
+	424: {Bits: []uint{7}, Name: "{0} Life after each Hit"},                      //
 	426: {Bits: []uint{10}, Name: "Monsters Have {0}% Enhanced Physical Damage"}, // we need to subtract 10 from that?
 	427: {Bits: []uint{23}, Name: "Monsters Have Meelee Attacks Deal Splash Damage"},
-	428: {Bits: []uint{14}, Name: "Players Have -{0}% to Fire Resist"},           //we need to subtract 60? probably I have something wrong
-	429: {Bits: []uint{14}, Name: "Players Have -{0}% to Light Resist"},          //we need to subtract 60? probably I have something wrong
-	430: {Bits: []uint{14}, Name: "Players Have -{0}% to Cold Resist"},           //we need to subtract 60? probably I have something wrong
-	431: {Bits: []uint{14}, Name: "Players Have -{0}% to Poison Resist"},         //we need to subtract 60? probably I have something wrong
+	428: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Fire Resist"},   //we need to subtract 60
+	429: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Light Resist"},  //we need to subtract 60
+	430: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Cold Resist"},   //we need to subtract 60
+	431: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Poison Resist"}, //we need to subtract 60
+	432: {Bits: []uint{12}, Name: "Monsters Have {0}% of Physical Damage As Extra Lightning Damage"},
 	433: {Bits: []uint{12}, Name: "Monsters Have {0}% of Physical Damage As Extra Cold Damage"},
 	434: {Bits: []uint{12}, Name: "Monsters Have {0}% of Physical Damage As Extra Fire Damage"},
 	435: {Bits: []uint{12}, Name: "Monsters Have +{0} of Physical Damage As Extra Poison Damage over 5 Seconds"},
 	436: {Bits: []uint{12}, Name: "Monsters Have +{0} of Physical Damage As Extra Magic Damage"}, //
-	437: {Bits: []uint{12}, Name: "Map Contains Stygian Dolls"}, // value 690?
-	438: {Bits: []uint{12}, Name: "Map Contains Succubus Witches"}, // value 720?
-	439: {Bits: []uint{12}, Name: "Map Contains Vampire Lords"}, // value 697?
-	440: {Bits: []uint{12}, Name: "Map Contains Hell Bovines"},     // value 391?
-	441: {Bits: []uint{12}, Name: "Map Contains Reanimated Horde"}, // value 698?
-	442: {Bits: []uint{12}, Name: "Map Contains Ghosts"},           // value 732?
-	448: {Bits: []uint{11, 9, 3}, Name: "class specific skills"},   // this is totally wrong, I need to see how skill types and class are represented
+	437: {Bits: []uint{12}, Name: "Map Contains Stygian Dolls"},                                  // value 690?
+	438: {Bits: []uint{12}, Name: "Map Contains Succubus Witches"},                               // value 720?
+	439: {Bits: []uint{12}, Name: "Map Contains Vampire Lords"},                                  // value 697?
+	440: {Bits: []uint{12}, Name: "Map Contains Hell Bovines"},                                   // value 391?
+	441: {Bits: []uint{12}, Name: "Map Contains Reanimated Horde"},                               // value 698?
+	442: {Bits: []uint{12}, Name: "Map Contains Ghosts"},                                         // value 732?
+	448: {Bits: []uint{11, 9, 3}, Name: "class specific skills"},                                 // this is totally wrong, I need to see how skill types and class are represented
 }
 
 // Shield codes

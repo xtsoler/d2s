@@ -18,7 +18,7 @@ func TestParse(t *testing.T) {
 
 	defer file.Close()
 
-	char, err := Parse(file)
+	char, err := Parse(file, true)
 	if err != nil {
 		log.Fatal(err)
 	}
