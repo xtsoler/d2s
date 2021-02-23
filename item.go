@@ -628,7 +628,7 @@ var magicalProperties = map[uint64]magicalProperty{
 
 	// It's weird that there's two bit fields here, but it seems like
 	// the first bit field enhanced min damage, and the second enchances
-	// maxium damage.
+	// maximum damage.
 	17: {Bits: []uint{9, 9}, Name: "+{0}% Enhanced Damage"},
 	19: {Bits: []uint{10}, Name: "+{0} to Attack rating"},
 	20: {Bits: []uint{6}, Name: "+{0}% Increased chance of blocking"},
@@ -643,7 +643,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	31: {Bits: []uint{11}, Bias: 10, Name: "+{0} Defense"},
 	32: {Bits: []uint{9}, Name: "+{0} vs. Missile"},
 	33: {Bits: []uint{8}, Bias: 10, Name: "+{0} vs. Melee"},
-	34: {Bits: []uint{6}, Name: "Damage Reduced by {0}"},
+	34: {Bits: []uint{6}, Name: "Physical Damage Taken Reduced by {0}"},
 	35: {Bits: []uint{6}, Name: "Magic Damage Reduced by {0}"},
 	36: {Bits: []uint{8}, Name: "Damage Reduced by {0}%"},
 	37: {Bits: []uint{8}, Name: "Magic Resist +{0}%"},
@@ -718,7 +718,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	107: {Bits: []uint{9, 3}, Name: "+{1} To {0}"},
 	108: {Bits: []uint{1}, Name: "Rest In Peace"},
 	//109: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
-	109: {Bits: []uint{9}, Name: "{0}% Reduced Curse Duration}"}, //??? maybe curse duration?
+	109: {Bits: []uint{9}, Name: "{0}% Reduced Curse Duration"}, //??? maybe curse duration?
 	181: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
 	182: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
 	183: {Bits: []uint{9, 5}, Name: "+{1} to spell {0} (char_class Only)"},
@@ -966,8 +966,9 @@ var magicalProperties = map[uint64]magicalProperty{
 	412: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Chance To Block"}, //we need to subtract 60!!
 	413: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0} Drain Life"},       // minus 60
 	416: {Bits: []uint{15}, Name: "map_mon_phys_as_extra_mag????"},
-	422: {Bits: []uint{6}, Name: "Replenish 1 in {0} seconds"},                   // ?? need to confirm this
-	424: {Bits: []uint{7}, Name: "{0} Life after each Hit"},                      //
+	422: {Bits: []uint{6}, Name: "Replenish 1 in {0} seconds"}, // ?? need to confirm this
+	424: {Bits: []uint{7}, Name: "{0} Life after each Hit"},    //
+	425: {Bits: []uint{8}, Name: "Damage +{0}"},
 	426: {Bits: []uint{10}, Name: "Monsters Have {0}% Enhanced Physical Damage"}, // we need to subtract 10 from that?
 	427: {Bits: []uint{23}, Name: "Monsters Have Meelee Attacks Deal Splash Damage"},
 	428: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Fire Resist"},   //we need to subtract 60
@@ -985,7 +986,9 @@ var magicalProperties = map[uint64]magicalProperty{
 	440: {Bits: []uint{12}, Name: "Map Contains Hell Bovines"},                                   // value 391?
 	441: {Bits: []uint{12}, Name: "Map Contains Reanimated Horde"},                               // value 698?
 	442: {Bits: []uint{12}, Name: "Map Contains Ghosts"},                                         // value 732?
-	448: {Bits: []uint{11, 9, 3}, Name: "class specific skills"},                                 // this is totally wrong, I need to see how skill types and class are represented
+	444: {Bits: []uint{5}, Name: "You May Now Summon {0} Additional Revives"},
+	448: {Bits: []uint{11, 9, 3}, Name: "class specific skills"}, // this is totally wrong, I need to see how skill types and class are represented
+	456: {Bits: []uint{8}, Name: "??"},
 }
 
 // Shield codes
