@@ -12,7 +12,7 @@ go get github.com/xtsoler/d2s
 
 This should download the repo in the "go" folder in the user directory.
 For windows it should be 
-C:\Users\{my_username}\go\src\github.com\xtsoler\d2s
+C:\Users\\{my_username}\go\src\github.com\xtsoler\d2s
 This directory can be openned with git / gitExt etc.
 
 Next we select "open folder" from Visual Studio Code or your favorite IDE.
