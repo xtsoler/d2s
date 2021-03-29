@@ -468,6 +468,7 @@ var setListMap = map[uint64]uint64{
 	2:  1,
 	3:  2,
 	4:  1,
+	5:  2,
 	6:  2,
 	7:  3,
 	10: 2,
@@ -568,7 +569,8 @@ var quantityMap = map[string]bool{
 	"dcho": true,
 	"bey":  true,
 	//"dcma": true, //this is actually not stackable!
-	"tes": true,
+	"tes":  true,
+	"upmp": true,
 
 	//Throwables
 	"tkf": true,
@@ -657,7 +659,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	45: {Bits: []uint{8}, Bias: 50, Name: "Poison Resist +{0}%"},
 	46: {Bits: []uint{5}, Name: "+{0}% to Maximum Poison Resist"},
 	48: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Fire Damage"}, // was 8, 9
-	49: {Bits: []uint{9}, Name: "+{0} to Maximum Fire Damage"},
+	49: {Bits: []uint{10}, Name: "+{0} to Maximum Fire Damage"},
 	50: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Lightning Damage"},
 	52: {Bits: []uint{10, 10}, Name: "Adds {0}-{1} Magic Damage"},
 	54: {Bits: []uint{8, 9, 8}, Name: "Adds {0}-{1} Cold Damage"},                      // was 8, 9, 8
@@ -734,7 +736,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	114: {Bits: []uint{6}, Name: "{0}% Damage Taken Goes to Mana"},
 	// The value of the data field is always 1.
 	115: {Bits: []uint{1}, Name: "Ignore Target Defense"},
-	116: {Bits: []uint{7}, Name: "{0}% Target Defense"},
+	116: {Bits: []uint{7}, Name: "-{0}% Target Defense"},
 	// The value of the data field is always 1.
 	117: {Bits: []uint{7}, Name: "Prevent Monster Heal"},
 	// The value of the data field is always 1.
@@ -747,7 +749,7 @@ var magicalProperties = map[uint64]magicalProperty{
 	124: {Bits: []uint{10}, Bias: 128, Name: "+{0} to Attack Rating against Undead"},
 	125: {Bits: []uint{1}, Name: "Throwable"},
 	// First value is class id, the next one is skill tree
-	126: {Bits: []uint{3, 3}, Name: "+{0} to Fire Skills"},
+	126: {Bits: []uint{3, 3}, Name: "+{0} to {0} Skills"},
 	127: {Bits: []uint{3}, Name: "+{0} to All Skill Levels"},
 	128: {Bits: []uint{11}, Name: "Attacker Takes Lightning Damage of {0}"}, //was 7 bits!!!!
 	134: {Bits: []uint{5}, Name: "Freezes Target +{0}"},
@@ -923,20 +925,22 @@ var magicalProperties = map[uint64]magicalProperty{
 	358: {Bits: []uint{0}, Name: "is reffered in 359?"}, // this needs fixing
 	359: {Bits: []uint{6, 10, 7}, Name: "Meelee Attacks Deal Splash Damage"},
 	360: {Bits: []uint{10, 10}, Name: "Corrupted"},
-	//361: {Bits: []uint{7, 7, 13}, Name: "{0} corruptor???"}, // no idea if that is correct!
-	361: {Bits: []uint{12}, Name: "{0} Corruptor"}, // no idea if that is correct!
+	361: {Bits: []uint{12}, Name: "{0} Corruptor"},
 	// PD2 map magic property codes
 	//320: {Bits: []uint{9}, Name: "?"},
 	362: {Bits: []uint{6}, Name: "{0} ???"},
 	363: {Bits: []uint{6}, Name: "{0} ???"},
-	364: {Bits: []uint{6}, Name: "{0} ???"},                        // no idea if that is correct!
-	365: {Bits: []uint{6}, Name: "{0} ???"},                        // no idea if that is correct!
-	370: {Bits: []uint{8}, Bias: 100, Name: "Magic Bonus {0}%"},    // we need to subtract 100?
-	371: {Bits: []uint{9}, Bias: 100, Name: "Goldfind Bonus {0}%"}, // we need to subtract 100?
+	364: {Bits: []uint{6}, Name: "{0} ???"},                         // no idea if that is correct!
+	365: {Bits: []uint{6}, Name: "{0} ???"},                         // no idea if that is correct!
+	366: {Bits: []uint{3, 3}, Name: "item_elemskill_magic {0} {1}"}, // dunno what to make of this, does not match unique jagged star
+	368: {Bits: []uint{3}, Name: "{0} to Maximum Curses"},           // no idea if that is correct!
+	370: {Bits: []uint{8}, Bias: 100, Name: "Magic Bonus {0}%"},     // we need to subtract 100?
+	371: {Bits: []uint{9}, Bias: 100, Name: "Goldfind Bonus {0}%"},  // we need to subtract 100?
 	372: {Bits: []uint{12}, Name: "Monster Desnity {0}%"},
 	373: {Bits: []uint{9}, Bias: 50, Name: "Experience {0}%"}, // we need to subtract 50? probably I have something wrong
 	374: {Bits: []uint{12}, Name: "{0} to Area Level"},
 	375: {Bits: []uint{12}, Name: "Monster Rarity {0}%"},
+	//376: {Bits: []uint{3, 12, 5}, Name: "????"},
 	//384: {Bits: []uint{9}, Name: "{0}%"},
 	388: {Bits: []uint{9}, Bias: 50, Name: "Monsters Have {0}% to Fire Skill Damage"},      // we need to subtract 50? probably I have something wrong
 	389: {Bits: []uint{9}, Bias: 50, Name: "Monsters Have +{0}% to Lighning Skill Damage"}, // we need to subtract 50
@@ -966,9 +970,11 @@ var magicalProperties = map[uint64]magicalProperty{
 	412: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Chance To Block"}, //we need to subtract 60!!
 	413: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0} Drain Life"},       // minus 60
 	416: {Bits: []uint{15}, Name: "map_mon_phys_as_extra_mag????"},
-	422: {Bits: []uint{6}, Name: "Replenish 1 in {0} seconds"}, // ?? need to confirm this
-	424: {Bits: []uint{7}, Name: "{0} Life after each Hit"},    //
-	425: {Bits: []uint{8}, Name: "Damage +{0}"},
+	//417: {Bits: []uint{8}, Name: "map_mon_passive_pois_pierce?"},
+	422: {Bits: []uint{6}, Name: "Replenish 1 in {0} seconds"},                   // ?? need to confirm this
+	423: {Bits: []uint{5}, Name: "+{0}% to Leap and Leap Attack Movement Speed"}, // this value seems to require +20 bias, but we can only have negative bias here..
+	424: {Bits: []uint{7}, Name: "{0} Life after each Hit"},                      //
+	425: {Bits: []uint{8}, Name: "-{0}% to Enemy Physical Resistance"},
 	426: {Bits: []uint{10}, Name: "Monsters Have {0}% Enhanced Physical Damage"}, // we need to subtract 10 from that?
 	427: {Bits: []uint{23}, Name: "Monsters Have Meelee Attacks Deal Splash Damage"},
 	428: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Fire Resist"},   //we need to subtract 60
@@ -988,7 +994,11 @@ var magicalProperties = map[uint64]magicalProperty{
 	442: {Bits: []uint{12}, Name: "Map Contains Ghosts"},                                         // value 732?
 	444: {Bits: []uint{5}, Name: "You May Now Summon {0} Additional Revives"},
 	448: {Bits: []uint{11, 9, 3}, Name: "class specific skills"}, // this is totally wrong, I need to see how skill types and class are represented
+	451: {Bits: []uint{7}, Bias: 30, Name: "Players have {0}% to Attack Speed"},
+	452: {Bits: []uint{7}, Bias: 30, Name: "Players have {0}% to Cast Rate"},
 	456: {Bits: []uint{8}, Name: "??"},
+	457: {Bits: []uint{7}, Bias: 40, Name: "Players have {0}% to Velocity"},
+	459: {Bits: []uint{5}, Name: "You May Now Summon {0} Additional Spirit"},
 }
 
 // Shield codes
@@ -1713,6 +1723,7 @@ var miscCodes = map[string]string{
 	"dcbl": "Pure Demonic Essense",
 	"dcho": "Black Soulstone",
 	"dcma": "Vision of Terror",
+	"upmp": "Cartographer's Orb",
 }
 
 var rareNames = map[uint64]string{
