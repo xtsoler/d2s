@@ -11,7 +11,8 @@ From a command line or powershell
 go get github.com/xtsoler/d2s
 
 This should download the repo in the "go" folder in the user directory.
-For windows it should be 
+For windows it should be
+
 C:\Users\\{my_username}\go\src\github.com\xtsoler\d2s
 
 This directory can be openned with git / gitExt etc.
