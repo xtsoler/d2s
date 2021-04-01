@@ -444,7 +444,7 @@ func parseItemList(bfr io.ByteReader, itemCount int) ([]Item, error) {
 	// list in order to read them as well.
 	numberOfItemsToRead := itemCount
 	//if enableDebugOutput {
-	fmt.Println("total items to parse:", numberOfItemsToRead)
+	println("[golang] total items to parse:", numberOfItemsToRead)
 	//}
 	for i := 0; i < numberOfItemsToRead; i++ {
 		if enableDebugOutput {
