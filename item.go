@@ -964,11 +964,11 @@ var magicalProperties = map[uint64]magicalProperty{
 	407: {Bits: []uint{7}, Name: "Monsters Have {0}% Chance of Open Wounds"},   // bits 7 and value was correct for one instance
 	408: {Bits: []uint{7}, Name: "Monsters Have {0}% Chance of Crushing Blow"}, // bits 7 and value was correct for one instance
 	409: {Bits: []uint{9}, Name: "Monsters Have {0}% Curse Duration Reduction"},
-	410: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Enhanced Defense"},    //we need to subtract 60? probably I have something wrong                           //
-	411: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Faster Hit Recovery"}, //minus 60
+	410: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0}% Enhanced Defense"},    //we need to subtract 60? probably I have something wrong                           //
+	411: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0}% Faster Hit Recovery"}, //minus 60
 
-	412: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% Chance To Block"}, //we need to subtract 60!!
-	413: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0} Drain Life"},       // minus 60
+	412: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0}% Chance To Block"}, //we need to subtract 60!!
+	413: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0} Drain Life"},       // minus 60
 	416: {Bits: []uint{15}, Name: "map_mon_phys_as_extra_mag????"},
 	//417: {Bits: []uint{8}, Name: "map_mon_passive_pois_pierce?"},
 	422: {Bits: []uint{6}, Name: "Replenish 1 in {0} seconds"},                   // ?? need to confirm this
@@ -977,10 +977,10 @@ var magicalProperties = map[uint64]magicalProperty{
 	425: {Bits: []uint{8}, Name: "-{0}% to Enemy Physical Resistance"},
 	426: {Bits: []uint{10}, Name: "Monsters Have {0}% Enhanced Physical Damage"}, // we need to subtract 10 from that?
 	427: {Bits: []uint{23}, Name: "Monsters Have Meelee Attacks Deal Splash Damage"},
-	428: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Fire Resist"},   //we need to subtract 60
-	429: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Light Resist"},  //we need to subtract 60
-	430: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Cold Resist"},   //we need to subtract 60
-	431: {Bits: []uint{14}, Bias: 60, Name: "Players Have -{0}% to Poison Resist"}, //we need to subtract 60
+	428: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0}% to Fire Resist"},   //we need to subtract 60
+	429: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0}% to Light Resist"},  //we need to subtract 60
+	430: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0}% to Cold Resist"},   //we need to subtract 60
+	431: {Bits: []uint{14}, Bias: 60, Name: "Players Have {0}% to Poison Resist"}, //we need to subtract 60
 	432: {Bits: []uint{12}, Name: "Monsters Have {0}% of Physical Damage As Extra Lightning Damage"},
 	433: {Bits: []uint{12}, Name: "Monsters Have {0}% of Physical Damage As Extra Cold Damage"},
 	434: {Bits: []uint{12}, Name: "Monsters Have {0}% of Physical Damage As Extra Fire Damage"},
@@ -1712,13 +1712,24 @@ var miscCodes = map[string]string{
 	"wss":  "Worldstone Shard",
 	"lbox": "Larzuk's Puzzlebox",
 	"upma": "Angelic Orb",
-	"t11":  "Ruins of Viz-Jun Map",
-	"t13":  "Bastion Keep Map",
-	"t12":  "Horazon's Memory Map",
-	"t32":  "Throne of Insanity Map",
-	"t16":  "Ruins of Viz-Jun Map",
-	"t17":  "River of Blood Map",
-	"t18":  "Phlegethon Map",
+	// season2 map codes
+	"t11": "Ruins of Viz-Jun Map",
+	"t12": "Horazon's Memory Map",
+	"t13": "Bastion Keep Map",
+	"t21": "Phlegethon Map",
+	"t22": "Torajan Jungle Map",
+	"t23": "Arreat Battlefield Map",
+	"t24": "Blood Moon Map",
+	"t31": "River of Blood Map",
+	"t32": "Throne of Insanity Map",
+	"t33": "Sewers of Harrogath Map",
+	"t34": "Ancestral Trial Map",
+	"t35": "Tomb of Zoltun Kulle Map",
+	"t41": "Cathedral of Light",
+	// old map codes:
+	//"t16":  "Ruins of Viz-Jun Map",
+	//"t17":  "River of Blood Map",
+	//"t18":  "Phlegethon Map",
 	"rera": "Horadrim Orb",
 	"imma": "Arcane Orb",
 	"imra": "Arcane Orb",
