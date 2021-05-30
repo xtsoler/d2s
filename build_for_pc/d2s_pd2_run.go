@@ -1,18 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
-	"encoding/json"
+
 	"github.com/xtsoler/d2s"
-	"io/ioutil"
 )
 
 func main() {
-
-
-	
 	arg := os.Args[1]
 	//fmt.Println(arg)
 
@@ -34,13 +32,13 @@ func main() {
 	//fmt.Println(char.Header.Name)
 	//fmt.Println(char.Header.Class)
 	//fmt.Println(char.Header)
-	
-	data, err := json.Marshal(char)
-    if err != nil {
-        log.Fatal(err)
-    }
 
-    err = ioutil.WriteFile(arg+".json", data, 0644)
+	data, err := json.Marshal(char)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = ioutil.WriteFile(arg+".json", data, 0644)
 	//fmt.Println(char)
 	//fmt.Println(string(data))
 	fmt.Println("parse completed.")
